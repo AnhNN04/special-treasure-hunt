@@ -132,7 +132,7 @@ with main_container:
 
         # 2.1: Bung lời chúc ngay lập tức
         elif st.session_state.greeting_sub_step == 1:
-            lottie_firework = load_lottieurl("https://lottie.host/ceae2701-a8c0-4b52-8fde-1d5061851b24/zZFVWA2cIq.json")
+            lottie_firework = load_lottieurl("https://lottie.host/3888fa0a-809b-424e-8dee-d3086f49a270/KWFTtoyVas.json")
             if lottie_firework:
                 st_lottie(lottie_firework, height=250, key="fireworks_reveal")
             st.balloons()
