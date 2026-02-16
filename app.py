@@ -176,7 +176,7 @@ with main_container:
             st.balloons()
             
             wish_text = (
-                "Chúc mừng năm mới Ất Tỵ 2026! 🐍✨🎉\n\n"
+                "Chúc mừng năm mới Bính Ngọ 2026! 🐎🧧✨🎉\n\n"
                 "Chúc em một năm thật rực rỡ 🌸, luôn giữ được sự cá tính và đặc biệt theo cách rất riêng của chính bản thân elm 💫.\n"
                 "Mong mọi điều tốt đẹp, may mắn và bình an 🍀🌿 sẽ luôn đồng hành cùng em trong từng chặng đường.\n"
                 "Hy vọng năm mới này anh sẽ có thêm nhiều cơ hội được hiểu em nhiều hơn một chút 😊😊😊"
