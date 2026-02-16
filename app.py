@@ -22,19 +22,19 @@ if 'chosen_gift_ids' not in st.session_state: st.session_state.chosen_gift_ids =
 # Ngân hàng quà tặng (4 QR và 1 hộp troll)
 GIFTS = {
     1: {
-        "name": "Lì xì May mắn 🧧\n\nCap màn hình lại ngayyy nha",
+        "name": "Lì xì May mắn 🧧\n\nCap màn hình lại ngayyy nha...",
         "type": "qr",
         "image": "assets/qr1.jpg",
         "caption": "Quét cái này là nhận may mắn cả năm ✨\nCòn nếu muốn may mắn cả đời thì nhắn mìn để hỏi nhé... 💌"
     },
     2: {
-        "name": "Giải Độc đắc 💎\n\nCap màn hình lại ngayyy nha",
+        "name": "Giải Độc đắc 💎\n\nCap màn hình lại ngayyy nha...",
         "type": "qr",
         "image": "assets/qr1.jpg",
         "caption": "Chúc mừng em trúng giải độc đắc nhaa 💎\nNhưng độc đắc là gì thì từ từ rồi sẽ bít. 😉"
     },
     3: {
-        "name": "Trà sữa Full Topping 🧋\n\nCap màn hình lại ngayyy nha",
+        "name": "Trà sữa Full Topping 🧋\n\nCap màn hình lại ngayyy nha...",
         "type": "qr",
         "image": "assets/qr1.jpg",
         "caption": "Trà sữa full topping cho người ngọt ngào nhất hôm nay 🧋😌"
@@ -46,10 +46,10 @@ GIFTS = {
         "caption": "Đen thì phải gì ạ...😅\n\nNhưng thui không sao vì, em vẫn sẽ là ưu tiên mà 💛"
     },
     5: {
-        "name": "Cốc nước dừa (Bị Trộm) 🕯️\n\nCap màn hình lại ngayyy nha",
+        "name": "Cốc nước dừa (Bị Trộm) 🕯️\n\nCap màn hình lại ngayyy nha...",
         "type": "qr",
         "image": "assets/qr1.jpg",
-        "caption": "Anh đã tìm được cốc nước dừa em bị uống mất rồi nhaa 🕯️\nĐiều kiện sử dụng: mai anh nói😌"
+        "caption": "Anh đã tìm được cốc nước dừa em bị uống mất rồi nhaa 🕯️"
     }
 }
 
@@ -75,30 +75,68 @@ with main_container:
         elif 1 <= st.session_state.auth_sub_step <= 3:
             current_q = st.session_state.auth_sub_step
             st.markdown(f"<p style='text-align: center; color: #FFD700; font-weight: bold;'>Thử thách {current_q} / 3</p>", unsafe_allow_html=True)
-            st.progress(current_q / 3) # Fix lỗi: giá trị luôn <= 1.0
+            st.progress(current_q / 3)
             
             questions = {
-                1: {"q": "Ở nhà tên của em (Nhi) là gì???", "a": "tôm"},
-                2: {"q": "Tômmm có nhớ tên của mìn (AnhNN) ở nhà là gì khokkkk???", "a": "tý"},
-                3: {"q": "Có thít nhận quà khokkk???", "a": "có"},
+                1: {
+                    "q": "Trong suy nghĩ của mìn, điều gì khiến bạn trở nên đặc biệt? ✨💌✨",
+                    "options": {
+                        "a": "Nụ cười",
+                        "b": "Sự khác biệt",
+                        "c": "Phong cách",
+                        "d": "Sự dịu dàng"
+                    },
+                    "a": "b"
+                },
+                2: {
+                    "q": "Trong buổi tất niên hôm đó, điều gì 'đáng tiếc' nhất xảy ra với elm? 😅😅😅",
+                    "options": {
+                        "a": "Bị chôm chôm chìa khoá",
+                        "b": "Về quá trễ",
+                        "c": "Bị uống mất cốc nước dừa",
+                        "d": "Uống nước lọc thay rượu (lừa thầy dối bạn)"
+                    },
+                    "a": "c"
+                },
+                3: {
+                    "q": "Nếu năm mới này có thêm một người luôn sẵn sàng lắng nghe và ủng hộ bạn, em có sẵn sang mở lòng không? 😊",
+                    "a": "có"
+                }
             }
 
-            st.markdown(f"<h3 style='text-align: center;'>{questions[current_q]['q']}</h3>", unsafe_allow_html=True)
-            user_ans = st.text_input("Nhập câu trả lời...", key=f"q_input_{current_q}").lower().strip()
+            question_data = questions[current_q]
+
+            st.markdown(f"<h3 style='text-align: center;'>{question_data['q']}</h3>", unsafe_allow_html=True)
+
+            # Nếu có options → dùng radio
+            if "options" in question_data:
+                user_ans = st.radio(
+                    "Chọn đáp án:",
+                    options=list(question_data["options"].keys()),
+                    format_func=lambda x: f"{x.upper()}. {question_data['options'][x]}",
+                    key=f"radio_{current_q}"
+                )
+            else:
+                user_ans = st.text_input(
+                    "Nhập câu trả lời...",
+                    key=f"q_input_{current_q}"
+                ).lower().strip()
             
             if st.session_state.error_msg:
                 shake_error(st.session_state.error_msg)
                 st.session_state.error_msg = None
 
             if st.button("KIỂM TRA ✅", key=f"btn_{current_q}"):
-                if user_ans == questions[current_q]['a']:
+                correct_answer = question_data["a"]
+
+                if user_ans == correct_answer:
                     st.balloons()
                     st.success("Chính xác luôn! Giọiiiii quá!")
                     time.sleep(2.0) 
-                    if current_q < 3: # Fix: Chỉ chạy đến 3
+                    if current_q < 3:
                         st.session_state.auth_sub_step += 1
                     else:
-                        st.session_state.auth_sub_step = 6 # Sang màn chuyển tiếp
+                        st.session_state.auth_sub_step = 6
                     st.rerun()
                 else:
                     st.session_state.error_msg = "Chưa juan rồi, thử lại ngayyyy ❤️"
@@ -134,12 +172,12 @@ with main_container:
         elif st.session_state.greeting_sub_step == 1:
             lottie_firework = load_lottieurl("https://lottie.host/3888fa0a-809b-424e-8dee-d3086f49a270/KWFTtoyVas.json")
             if lottie_firework:
-                st_lottie(lottie_firework, height=250, key="fireworks_reveal")
+                st_lottie(lottie_firework, height=220, key="fireworks_reveal")
             st.balloons()
             
             wish_text = (
                 "Chúc mừng năm mới Ất Tỵ 2026! 🐍✨🎉\n\n"
-                "Chúc em một năm thật rực rỡ 🌸, luôn giữ được sự cá tính và đặc biệt theo cách rất riêng của mình 💫.\n"
+                "Chúc em một năm thật rực rỡ 🌸, luôn giữ được sự cá tính và đặc biệt theo cách rất riêng của chính bản thân elm 💫.\n"
                 "Mong mọi điều tốt đẹp, may mắn và bình an 🍀🌿 sẽ luôn đồng hành cùng em trong từng chặng đường.\n"
                 "Hy vọng năm mới này anh sẽ có thêm nhiều cơ hội được hiểu em nhiều hơn một chút 😊😊😊"
             )           
@@ -155,9 +193,9 @@ with main_container:
             lottie_ready = load_lottieurl("https://lottie.host/57530e9d-773a-446a-8b36-541575f0a0e9/yT51WkX6Ld.json")
             if lottie_ready:
                 st_lottie(lottie_ready, height=250, key="ready_gacha")
-            st.markdown("<p style='text-align: center;'>Anh dành tặng em <b>2 lượt chọn</b> hộp quà may mắn nhe!</p>", unsafe_allow_html=True)
+            st.markdown("<p style='text-align: center;'>Anh gửi bạn <b>2 lượt chọn</b> hộp quà may mắn henggg!</p>", unsafe_allow_html=True)
             st.markdown('<div class="wobble-btn">', unsafe_allow_html=True)
-            if st.button("🕹 ĐI ĐẾN KHO BÁU"):
+            if st.button("🕹 NHANH CHO NÓNG..."):
                 st.session_state.step = 3
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
@@ -171,7 +209,8 @@ with main_container:
             if lottie_bye:
                 st_lottie(lottie_bye, height=300, key="bye_animation")
             st.markdown("<h3 style='text-align: center; color: #FFD700;'>Thật sự là a mới nghĩ ra code đến đoạn này thui ý. Ỏ...</h3>", unsafe_allow_html=True)
-            st.write("<p style='text-align: left;'>Hẹn gặp lại em (cô gái đặc biệt) ở những bất ngờ tiếp theo nha. <br> Một lần nữa, chúc em một năm mới thật nhiều ý nghĩa và luôn mỉm cười ạ. 😊</p>", unsafe_allow_html=True)
+            # st.write("<p style='text-align: left;'>Anh cảm ơn bạn đã chịu xem đến cuối. Hẹn gặp lại em (cô gái đặc biệt) ở những thứ 'lỏ lỏ, odds and ends' tiếp nhé. <br> Nhưng vẫn mong năm mới thật nhiều ý nghĩa và luôn mỉm cười với elm. 😊</p>", unsafe_allow_html=True)
+            st.write("<p style='text-align: left;'>Anh cảm ơn em vì đã dành thời gian xem đến cuối.\n\nHẹn gặp lại em (cô gái đặc biệt) ở những điều nho nhỏ, “lỏ lỏ”, những odds and ends thú vị phía trước nhé.\n\nVà vẫn mong năm mới của em sẽ thật nhiều ý nghĩa, luôn mỉm cười thật tươi. 😊</p>", unsafe_allow_html=True)
 
         # B. Màn hình chọn hộp quà
         elif not st.session_state.confirm_choice:
@@ -217,7 +256,7 @@ with main_container:
                 st.balloons()
                 if gift_data["type"] == "qr":
                     st.success(f"🎉 TRÚNG RỒI: {gift_data['name']}")
-                    st.image(gift_data["image"], use_container_width=True)
+                    st.image(gift_data["image"], width='stretch')
                     st.info(gift_data["caption"])
                 else:
                     st.error(f"😅 {gift_data['name']}")
